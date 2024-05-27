@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch("https://International-Football-Results-API.proxy-production.allthingsdev.co/api/v1/cricket/matches?year=2023&skip=0&limit=10", requestOptions);
             const data = await response.json();
 
+            // Log the response data for debugging
+            console.log(data);
+
             displayScores(data);
         } catch (error) {
             console.error('Error fetching the cricket scores:', error);
@@ -26,12 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayScores(data) {
-        if (data.matches && data.matches.length > 0) {
+        if (data && data.matches && data.matches.length > 0) {
             scoreboard.innerHTML = data.matches.map(match => `
                 <div class="match">
                     <p><strong>${match.team1} vs ${match.team2}</strong></p>
-                    <p>Score: ${match.score}</p>
-                    <p>Status: ${match.status}</p>
+                    <p>Score: ${match.score || 'N/A'}</p>
+                    <p>Status: ${match.status || 'N/A'}</p>
                 </div>
             `).join('');
         } else {
@@ -39,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Refresh scores every 30 seconds
+    // Fetch scores when the page loads and every 30 seconds thereafter
     fetchScores();
     setInterval(fetchScores, 30000);
 });
